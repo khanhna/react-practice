@@ -1,5 +1,5 @@
 import './App.css';
-import CharJsLineTest from './pages/ChartJsCombinedChartTest';
+import CharJsLineTest from './pages/CharJsRaw';
 
 function App() {
   return (

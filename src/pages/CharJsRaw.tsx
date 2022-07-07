@@ -1,10 +1,13 @@
 import { useEffect, useRef } from 'react';
 import {
   Chart as ChartJS,
+  BarController,
+  LineController,
   CategoryScale,
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
@@ -12,13 +15,25 @@ import {
   ChartData,
 } from 'chart.js';
 import zoomPlugin from 'chartjs-plugin-zoom';
-import { Line } from 'react-chartjs-2';
+import { Chart } from 'react-chartjs-2';
 import { faker } from '@faker-js/faker';
 import { enableHorizontalCrosshairLineChartPlugin } from 'src/components/ChartJs/Line';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, zoomPlugin);
+ChartJS.register(
+  BarController,
+  LineController,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  zoomPlugin,
+);
 
-const chartOptions: ChartOptions<'line'> = {
+const chartOptions: ChartOptions = {
   responsive: true,
   interaction: {
     mode: 'index',
@@ -56,9 +71,12 @@ const chartOptions: ChartOptions<'line'> = {
     yLower: {
       type: 'linear',
       stack: 'yScale',
+      grid: {
+        drawOnChartArea: false,
+      },
       beginAtZero: true,
-      max: 1000,
       stackWeight: 1,
+      display: false,
     },
     x: {
       grid: {
@@ -68,23 +86,23 @@ const chartOptions: ChartOptions<'line'> = {
     y: {
       type: 'linear',
       stack: 'yScale',
-      display: true,
-      position: 'left',
-      stackWeight: 4,
       grid: {
         drawOnChartArea: false,
       },
+      stackWeight: 4,
     },
   },
 };
 
 const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
 
-export const chartJsData: ChartData<'line'> = {
+export const chartJsData: ChartData = {
   labels,
   datasets: [
     {
+      type: 'line',
       label: 'Dataset 1',
+      stack: 'price',
       data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
       borderColor: 'rgb(255, 99, 132)',
       backgroundColor: 'rgba(255, 99, 132, 0.5)',
@@ -92,7 +110,9 @@ export const chartJsData: ChartData<'line'> = {
       yAxisID: 'y',
     },
     {
+      type: 'line',
       label: 'Dataset 2',
+      stack: 'price',
       data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
       borderColor: 'rgb(53, 162, 235)',
       backgroundColor: 'rgba(53, 162, 235, 0.5)',
@@ -100,22 +120,37 @@ export const chartJsData: ChartData<'line'> = {
       yAxisID: 'y',
     },
     {
+      type: 'bar',
       label: 'Sub Dataset',
+      stack: 'marketVol',
       data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
       borderColor: 'rgb(235, 53, 229)',
       backgroundColor: 'rgba(53, 162, 235, 0.5)',
       xAxisID: 'xLower',
       yAxisID: 'yLower',
     },
+    {
+      type: 'bar',
+      label: 'Sub Dataset 2',
+      stack: 'stockVol',
+      data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
+      borderColor: 'rgb(235, 53, 229)',
+      backgroundColor: 'rgba(246, 34, 34, 0.562)',
+      xAxisID: 'xLower',
+      yAxisID: 'yLower',
+    },
   ],
 };
 
-export default function ChartJsCombinedChartTest() {
+export default function CharJsRaw() {
   const chartRef = useRef<ChartJS<'line'>>(null);
 
   useEffect(() => {
     ChartJS.register(enableHorizontalCrosshairLineChartPlugin);
-    return () => ChartJS.unregister(enableHorizontalCrosshairLineChartPlugin);
+
+    return () => {
+      ChartJS.unregister(enableHorizontalCrosshairLineChartPlugin);
+    };
   }, []);
 
   const handleResetZoom: React.MouseEventHandler<HTMLButtonElement> = (e) => {
@@ -126,8 +161,8 @@ export default function ChartJsCombinedChartTest() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: '100vw', alignItems: 'center' }}>
-      <div style={{ width: '50vw' }}>
-        <Line options={chartOptions} data={chartJsData} style={{ height: '400px' }} ref={chartRef} />
+      <div style={{ width: '80vw' }}>
+        <Chart type="line" options={chartOptions} data={chartJsData} ref={chartRef} />
       </div>
       <button onClick={handleResetZoom}>Reset Zoom</button>
     </div>
