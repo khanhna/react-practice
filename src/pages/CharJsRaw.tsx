@@ -62,13 +62,13 @@ const chartOptions: ChartOptions = {
     },
   },
   scales: {
-    xLower: {
+    xVol: {
       grid: {
         drawOnChartArea: false,
       },
       display: false,
     },
-    yLower: {
+    yVol: {
       type: 'linear',
       stack: 'yScale',
       grid: {
@@ -82,6 +82,16 @@ const chartOptions: ChartOptions = {
       grid: {
         drawOnChartArea: false,
       },
+    },
+    yRatio: {
+      type: 'linear',
+      stack: 'yRatio',
+      grid: {
+        drawOnChartArea: false,
+      },
+      stackWeight: 4,
+      suggestedMin: -10,
+      suggestedMax: 120,
     },
     y: {
       type: 'linear',
@@ -113,11 +123,11 @@ export const chartJsData: ChartData = {
       type: 'line',
       label: 'Dataset 2',
       stack: 'price',
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
+      data: labels.map(() => faker.datatype.number({ min: 0, max: 100 })),
       borderColor: 'rgb(53, 162, 235)',
       backgroundColor: 'rgba(53, 162, 235, 0.5)',
       xAxisID: 'x',
-      yAxisID: 'y',
+      yAxisID: 'yRatio',
     },
     {
       type: 'bar',
@@ -126,8 +136,8 @@ export const chartJsData: ChartData = {
       data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
       borderColor: 'rgb(235, 53, 229)',
       backgroundColor: 'rgba(53, 162, 235, 0.5)',
-      xAxisID: 'xLower',
-      yAxisID: 'yLower',
+      xAxisID: 'xVol',
+      yAxisID: 'yVol',
     },
     {
       type: 'bar',
@@ -136,8 +146,8 @@ export const chartJsData: ChartData = {
       data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
       borderColor: 'rgb(235, 53, 229)',
       backgroundColor: 'rgba(246, 34, 34, 0.562)',
-      xAxisID: 'xLower',
-      yAxisID: 'yLower',
+      xAxisID: 'xVol',
+      yAxisID: 'yVol',
     },
   ],
 };
